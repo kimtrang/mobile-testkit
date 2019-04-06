@@ -320,7 +320,7 @@ def compare_generic_types(object1, object2):
     elif isinstance(object1, int) and isinstance(object2, long):
         return object1 == int(object2)
     elif isinstance(object1, float) and isinstance(object2, long):
-        return object1 == float(object2)
+        return compare_float(object1, float(object2))
     elif isinstance(object1, long) and isinstance(object2, float):
         return object1 == long(float(object2))
     return False
@@ -387,3 +387,42 @@ def meet_supported_version(version_list, target_version):
             return False
 
     return True
+
+
+def compare_float(float1, float2):
+    length1 = get_large_float_digits(float1)
+    length2 = get_large_float_digits(float2)
+    if length1 != length2:
+        return False
+    # if the number of digit is not big enough
+    # normal comparison would work
+    if length1 < 10:
+        return float1 == float2
+    return compare_the_first_six_significants(float1, float2, length1)
+
+
+def compare_the_first_six_significants(float1, float2, length):
+    '''
+    as the method name specified
+    only the first six digit numbers need to be compared
+    i.e. when comparing 
+    -3.45977e+13 and 
+    -3.459771e+13
+    we should treat them equal even though the difference between the 2 is
+    10,000,000.0 (ten millions)
+    '''
+    base = 10
+    i = 1
+    while i < length - 6:
+        base *= 10
+        i += 1
+    return int(float1 / base) == int(float2 / base)
+
+
+def get_large_float_digits(float_number):
+    # return number of digits of a float number
+    count = 1
+    while abs(float_number) > 10:
+        float_number = float_number / 10
+        count += 1
+    return count
