@@ -396,7 +396,7 @@ def compare_float(float1, float2):
         return False
     # if the number of digit is not big enough
     # normal comparison would work
-    if length1 < 10:
+    if length1 < 7:
         return float1 == float2
     return compare_the_first_six_significants(float1, float2, length1)
 
@@ -416,7 +416,9 @@ def compare_the_first_six_significants(float1, float2, length):
     while i < length - 6:
         base *= 10
         i += 1
-    return int(float1 / base) == int(float2 / base)
+    if int(float1 / base) == int(float2 / base):
+        return True
+    return round(float1 / base) == round(float2 / base)
 
 
 def get_large_float_digits(float_number):
