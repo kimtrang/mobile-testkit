@@ -341,7 +341,8 @@ def params_from_base_suite_setup(request):
         "resume_cluster": resume_cluster,
         "create_db_per_test": create_db_per_test,
         "enable_rebalance": enable_rebalance,
-        "testserver_list": testserver_list
+        "testserver_list": testserver_list,
+        "test_name": request.node.name
     }
 
     if create_db_per_suite:
@@ -391,7 +392,7 @@ def params_from_base_test_setup(params_from_base_suite_setup):
     create_db_per_test = params_from_base_suite_setup["create_db_per_test"]
     cluster_topology = params_from_base_suite_setup["cluster_topology"]
     testserver_list = params_from_base_suite_setup["testserver_list"]
-    test_name = request.node.name
+    test_name = params_from_base_suite_setup["test_name"]
 
     if create_db_per_test:
         db_name_list = []
