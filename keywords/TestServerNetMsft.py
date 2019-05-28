@@ -108,7 +108,8 @@ class TestServerNetMsft(TestServerBase):
             status = self.ansible_runner.run_ansible_playbook(
                 "start-testserver-msft.yml",
                 extra_vars={
-                    "binary_path": self.binary_path
+                    "binary_path": self.binary_path,
+                    "version_build": self.version_build
                 }
             )
         else:
@@ -124,6 +125,7 @@ class TestServerNetMsft(TestServerBase):
 
         if status != 0:
             raise LiteServError("Could not start testserver")
+        time.sleep(15)
 
         print("wait for 10 seconds until windows app to start properly")
         time.sleep(10)
