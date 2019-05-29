@@ -398,15 +398,15 @@ def params_from_base_test_setup(params_from_base_suite_setup):
         db_name_list = []
         cbl_db_list = []
         db_obj_list = []
-        for testserver, base_url, i in zip(testserver_list, base_url_list, range(len(base_url_list))):
+        for testserv, base_url, i in zip(testserver_list, base_url_list, range(len(base_url_list))):
             log_info("Starting TestServer...")
             test_name_cp = test_name.replace("/", "-")
             log_filename = "{}/logs/{}-{}-{}.txt".format(RESULTS_DIR,
-             type(testserver).__name__, test_name_cp, datetime.datetime.now())
+             type(testserv).__name__, test_name_cp, datetime.datetime.now())
             if device_enabled:
-                testserver.start_device(log_filename)
+                testserv.start_device(log_filename)
             else:
-                testserver.start(log_filename)
+                testserv.start(log_filename)
 
             db_name = "{}_{}_{}".format(create_db_per_test, str(time.time()), i + 1)
             log_info("db name for {} is {}".format(base_url, db_name))
@@ -456,11 +456,12 @@ def params_from_base_test_setup(params_from_base_suite_setup):
     }
 
     if create_db_per_test:
-        for cbl_db, db_obj, base_url in zip(cbl_db_list, db_obj_list, base_url_list):
+        for testserv, cbl_db, db_obj, base_url in zip(testserver_list, cbl_db_list, db_obj_list, base_url_list):
             log_info("Deleting the database {} at the test teardown for base url {}".format(db_obj.getName(cbl_db),
                                                                                             base_url))
             time.sleep(2)
             db_obj.deleteDB(cbl_db)
+            testserv.stop()
 
 
 @pytest.fixture(scope="function")
